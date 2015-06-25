@@ -6,6 +6,7 @@ package le_go
 
 import (
 	"fmt"
+	flag "github.com/spf13/pflag"
 	"net"
 	"os"
 	"strings"
@@ -29,6 +30,12 @@ type Logger struct {
 }
 
 const lineSep = "\n"
+
+var endpoint string
+
+func init() {
+	flag.StringVar(&endpoint, "endpoint", "data.logentries.com:80", "hostname:port - endpoint to send data")
+}
 
 // Connect creates a new Logger instance and opens a TCP connection to
 // logentries.com,
@@ -57,7 +64,7 @@ func (logger *Logger) Close() error {
 
 // Opens a TCP connection to logentries.com
 func (logger *Logger) openConnection() error {
-	conn, err := net.Dial("tcp", "data.logentries.com:80")
+	conn, err := net.Dial("tcp", endpoint)
 	if err != nil {
 		return err
 	}
